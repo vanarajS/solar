@@ -2,6 +2,7 @@ name: Solar-system workflow
 
 on:
     workflow_dispatch:
+    push:
         branches:
             - main
             - 'feature/**'
