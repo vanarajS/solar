@@ -1,0 +1,9 @@
+name: Solar-system workflow
+
+on:
+    workflow_dispatch:
+        branches:
+            - main
+            - 'feature/**'
+
+
