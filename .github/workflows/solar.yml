@@ -21,6 +21,8 @@ jobs:
     unit_testing:
         name: Unit testing
         runs-on: ubuntu-latest
+        outputs:
+            cache-hit: ${{ steps.cache.outpus.cache-hit }}
         steps:
             - name: Checkout repo
               uses: actions/checkout@v4
@@ -29,9 +31,10 @@ jobs:
               uses: actions/setup-node@v3
               with: 
                 node-version: 18
+                cache: 'npm'
             
             - name: Install dep
-              run: npm install
+              run: npm ci
             
             - name: Unit Testing
               run: npm test
@@ -59,9 +62,10 @@ jobs:
              uses: actions/setup-node@v3
              with:
                 node-version: 18
+                cache: 'npm'
 
            - name: install dep
-             run: npm install
+             run: npm ci
 
            - name: Coverage
              run: npm run coverage
