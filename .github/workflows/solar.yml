@@ -1,0 +1,91 @@
+name: Solar-system workflow
+
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - main
+            - 'feature/**'
+
+env:
+    MONGO_URI: 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
+    MONGO_USERNAME: superuser
+    MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+    unit_testing:
+        name: Unit testing
+        runs-on: ubuntu-latest
+        outputs:
+            cache-hit: ${{ steps.cache.outpus.cache-hit }}
+        steps:
+            - name: Checkout repo
+              uses: actions/checkout@v4
+        
+            - name: Setup nodejs
+              uses: actions/setup-node@v3
+              with: 
+                node-version: 18
+                cache: 'npm'
+            
+            - name: Install dep
+              run: npm ci
+            
+            - name: Unit Testing
+              run: npm test
+            
+            - name: Archive test result
+              uses: actions/upload-artifact@v4
+              with:
+                name: Mocha-test-result
+                path: test-results.xml
+            
+            - name: Publish Test Report
+              uses: dorny/test-reporter@v1
+              if: always()
+              with:
+                name: Unit Tests
+                path: test-results.xml
+                reporter: java-junit
+    Code_coverage:
+        runs-on: ubuntu-latest
+        steps:
+           - name: Checkout
+             uses: actions/checkout@v4
+           
+           - name: Setup nodejs
+             uses: actions/setup-node@v3
+             with:
+                node-version: 18
+                cache: 'npm'
+
+           - name: install dep
+             run: npm ci
+
+           - name: Coverage
+             run: npm run coverage
+
+           - name: Coverage-result
+             continue-on-error: true
+             uses: actions/upload-artifact@v4
+             with:
+                name: code-coverage-result
+                path: coverage
+                retention-days: 5
+            
+           - name: Publish coverage report
+             uses: irongut/CodeCoverageSummary@v1.3.0
+             with:
+                filename: coverage/cobertura-coverage.xml
+                badge: true
+                fail_below_min: true
+                format: markdown
+                output: both
+            
+
+
