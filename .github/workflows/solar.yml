@@ -43,7 +43,7 @@ jobs:
               with:
                 name: Unit Tests
                 path: test-results.xml
-                reporter: npm-junit
+                reporter: java-junit
             
 
 
