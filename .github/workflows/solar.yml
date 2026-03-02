@@ -49,6 +49,30 @@ jobs:
                 name: Unit Tests
                 path: test-results.xml
                 reporter: java-junit
+    Code_coverage:
+        runs-on: ubuntu-latest
+        steps:
+           - name: Checkout
+             uses: actions/checkout@v4
+           
+           - name: Setup nodejs
+             uses: actions/setup-node@v3
+             with:
+                node-version: 18
+
+           - name: install dep
+             run: npm install
+
+           - name: Coverage
+             run: npm run coverage
+             
+           - name: Coverage-result
+             uses: actions/upload-artifact@v4
+             with:
+                name: code-coverage-result
+                path: coverage
+                retention-days: 5
+            
             
 
 
