@@ -6,4 +6,24 @@ on:
             - main
             - 'feature/**'
 
+jobs:
+    unit_testing:
+        name: Unit testing
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repo
+              uses: actions/checkout@v4
+        
+            - name: Setup nodejs
+              uses: actions/setup-node@v3
+              with: 
+                node-version: 18
+            
+            - name: Install dep
+              run: npm install
+            
+            - name: Unit Testing
+              run: npm test
+            
+
 
